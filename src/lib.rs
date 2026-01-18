@@ -6,9 +6,10 @@ mod tokenizer;
 mod transcription;
 mod voice;
 
+use ort::ep;
 use {
     bincode::{config::standard, decode_from_slice},
-    ort::{execution_providers::CUDAExecutionProvider, session::Session},
+    ort::{session::Session},
     std::{collections::HashMap, path::Path, sync::Arc, time::Duration},
     tokio::{fs::read, sync::Mutex},
 };
@@ -25,7 +26,14 @@ impl KokoroTts {
         let (voices, _) = decode_from_slice(&voices, standard())?;
 
         let model = Session::builder()?
-            .with_execution_providers([CUDAExecutionProvider::default().build()])?
+            .with_execution_providers([
+                // Prefer TensorRT over CUDA.
+                ep::TensorRT::default().build(),
+                ep::CUDA::default().build(),
+                // Use DirectML on Windows if NVIDIA EPs are not available
+                ep::DirectML::default().build(),
+                // Or use ANE on Apple platforms
+                ep::CoreML::default().build()])?
             .commit_from_file(model_path)?;
         Ok(Self {
             model: Arc::new(model.into()),
@@ -40,7 +48,14 @@ impl KokoroTts {
         let (voices, _) = decode_from_slice(voices.as_ref(), standard())?;
 
         let model = Session::builder()?
-            .with_execution_providers([CUDAExecutionProvider::default().build()])?
+            .with_execution_providers([
+                // Prefer TensorRT over CUDA.
+                ep::TensorRT::default().build(),
+                ep::CUDA::default().build(),
+                // Use DirectML on Windows if NVIDIA EPs are not available
+                ep::DirectML::default().build(),
+                // Or use ANE on Apple platforms
+                ep::CoreML::default().build()])?
             .commit_from_memory(model.as_ref())?;
         Ok(Self {
             model: Arc::new(model.into()),

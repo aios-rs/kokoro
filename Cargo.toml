@@ -28,8 +28,8 @@ tokio = { version = "1.49",features = ["fs", "rt-multi-thread","time", "sync"] }
 
 [dev-dependencies]
 anyhow = "1.0.100"
-rodio = { version = "0.21.1",default-features = false,features = ["wav","playback"] }
-tokio = {version = "1.49.0",features = ["macros"]}
+rodio = { version = "0.21",default-features = false,features = ["wav","playback"] }
+tokio = {version = "1.49",features = ["macros"]}
 
 [build-dependencies]
 cc = "1.2"
