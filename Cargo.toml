@@ -19,7 +19,7 @@ futures = "0.3.31"
 jieba-rs = "0.8"
 log = "0.4.28"
 ndarray = "0.17"
-ort = { version = "2.0.0-rc.11",default-features = true}
+ort = { version = "2.0.0-rc.11",default-features = true,features = ["coreml","cuda","directml"]}
 pin-project = "1.1.10"
 pinyin = "0.11"
 rand="0.10.0-rc.6"
